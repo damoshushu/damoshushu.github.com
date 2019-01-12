@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="云服务,消息队列,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="转于JCSprout 简单的消息发送在分析之前先看一个简单的消息发送是怎么样的。  以下代码基于 SpringBoot 构建。  首先创建一个 org.apache.kafka.clients.producer.Producer 的 bean。  主要关注 bootstrap.servers，它是必填参数。指的是 Kafka 集群中的 broker 地址，例如 127.0.0.1:9094。  其">
+<meta name="keywords" content="云服务,消息队列">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从源码分析如何优雅的使用 Kafka 生产者">
+<meta property="og:url" content="https://damoshushu.github.io/2018/11/16/KafkaConsumer/index.html">
+<meta property="og:site_name" content="大漠说程序">
+<meta property="og:description" content="转于JCSprout 简单的消息发送在分析之前先看一个简单的消息发送是怎么样的。  以下代码基于 SpringBoot 构建。  首先创建一个 org.apache.kafka.clients.producer.Producer 的 bean。  主要关注 bootstrap.servers，它是必填参数。指的是 Kafka 集群中的 broker 地址，例如 127.0.0.1:9094。  其">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwgy1fw2hc2t8oij30n507g0u6.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNbRwgy1fw2he841x7j30ou054751.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNbRwly1fw3fsyrkpbj3103065mya.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fw3ftq0w5lj312g053770.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fw3g4hce6aj30zv0b0dhp.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fw3g54ne3oj31do06t0wl.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNbRwly1fw3g9fst9kj30zy07jab0.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fw3j5x05izj30a40btmxt.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwly1fw3jc9hvwbj30rc0273yn.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fw3jh4xtt2j31fo02pgms.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwly1fw3job8ejaj31fw05owg2.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNbRwly1fw3jq5h0nyj30p607oq4e.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwly1fw3jxiet6mj30pj06smyb.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwly1fw3jybsavdj30zj077abj.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwly1fw3k0giiy6j30zm079ta7.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNbRwly1fw3k5uqf68j30rm04pt94.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fw3kajn4iyj30r20g2772.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fw3khecuqej313704uwg9.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fw3kih9wf1j30j005daaq.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNbRwly1fw3kntf8xlj30sn0ju42o.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fw3kqrk5rnj312e0jbjve.jpg">
+<meta property="og:image" content="https://ws4.sinaimg.cn/large/006tNbRwly1fw3kuprn02j30zo09qgnr.jpg">
+<meta property="og:image" content="https://ws2.sinaimg.cn/large/006tNbRwly1fw3l52birsj30u607o0ta.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fw3l2ydx4tj311l0e9ae3.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/006tNbRwly1fw3l3mh0pqj312409940u.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fw3mw4a00rj311x0kp434.jpg">
+<meta property="og:updated_time" content="2019-01-12T10:18:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从源码分析如何优雅的使用 Kafka 生产者">
+<meta name="twitter:description" content="转于JCSprout 简单的消息发送在分析之前先看一个简单的消息发送是怎么样的。  以下代码基于 SpringBoot 构建。  首先创建一个 org.apache.kafka.clients.producer.Producer 的 bean。  主要关注 bootstrap.servers，它是必填参数。指的是 Kafka 集群中的 broker 地址，例如 127.0.0.1:9094。  其">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/006tNbRwgy1fw2hc2t8oij30n507g0u6.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://damoshushu.github.io/2018/11/16/KafkaConsumer/">
+
+
+
+
+
+  <title>从源码分析如何优雅的使用 Kafka 生产者 | 大漠说程序</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">大漠说程序</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">大漠孤烟直，长河落日圆</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://damoshushu.github.io/2018/11/16/KafkaConsumer/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="大漠叔叔">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/santi.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大漠说程序">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从源码分析如何优雅的使用 Kafka 生产者</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-16T15:30:06+00:00">
+                2018-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/消息队列/" itemprop="url" rel="index">
+                    <span itemprop="name">消息队列</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2.4k
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  8
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="https://github.com/crossoverJie/JCSprout/blob/master/MD/kafka/kafka-product.md" target="_blank" rel="noopener">转于JCSprout</a></p>
+<h1 id="简单的消息发送"><a href="#简单的消息发送" class="headerlink" title="简单的消息发送"></a>简单的消息发送</h1><p>在分析之前先看一个简单的消息发送是怎么样的。</p>
+<blockquote>
+<p>以下代码基于 SpringBoot 构建。</p>
+</blockquote>
+<p>首先创建一个 <code>org.apache.kafka.clients.producer.Producer</code> 的 bean。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwgy1fw2hc2t8oij30n507g0u6.jpg" alt=""></p>
+<p>主要关注 <code>bootstrap.servers</code>，它是必填参数。指的是 Kafka 集群中的 broker 地址，例如 <code>127.0.0.1:9094</code>。</p>
+<blockquote>
+<p>其余几个参数暂时不做讨论，后文会有详细介绍。</p>
+</blockquote>
+<p>接着注入这个 bean 即可调用它的发送函数发送消息。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwgy1fw2he841x7j30ou054751.jpg" alt=""></p>
+<p>这里我给某一个 Topic 发送了 10W 条数据，运行程序消息正常发送。</p>
+<p>但这仅仅只是做到了消息发送，对消息是否成功送达完全没管，等于是纯<code>异步</code>的方式。</p>
+<h2 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h2><p>那么我想知道消息到底发送成功没有该怎么办呢？</p>
+<p>其实 <code>Producer</code> 的 <code>API</code> 已经帮我们考虑到了，发送之后只需要调用它的 <code>get()</code> 方法即可同步获取发送结果。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fw3fsyrkpbj3103065mya.jpg" alt=""></p>
+<p>发送结果：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fw3ftq0w5lj312g053770.jpg" alt=""></p>
+<p>这样的发送效率其实是比较低下的，因为每次都需要同步等待消息发送的结果。 </p>
+<h2 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h2><p>为此我们应当采取异步的方式发送，其实 <code>send()</code> 方法默认则是异步的，只要不手动调用  <code>get()</code> 方法。</p>
+<p>但这样就没法获知发送结果。</p>
+<p>所以查看 <code>send()</code> 的 API 可以发现还有一个参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Future&lt;RecordMetadata&gt; <span class="title">send</span><span class="params">(ProducerRecord&lt;K, V&gt; producer, Callback callback)</span></span>;</span><br></pre></td></tr></table></figure>
+<p><code>Callback</code> 是一个回调接口，在消息发送完成之后可以回调我们自定义的实现。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fw3g4hce6aj30zv0b0dhp.jpg" alt=""></p>
+<p>执行之后的结果：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fw3g54ne3oj31do06t0wl.jpg" alt=""></p>
+<p>同样的也能获取结果，同时发现回调的线程并不是上文同步时的<code>主线程</code>，这样也能证明是异步回调的。</p>
+<p>同时回调的时候会传递两个参数：</p>
+<ul>
+<li><code>RecordMetadata</code> 和上文一致的消息发送成功后的元数据。</li>
+<li><code>Exception</code> 消息发送过程中的异常信息。</li>
+</ul>
+<p>但是这两个参数并不会同时都有数据，只有发送失败才会有异常信息，同时发送元数据为空。</p>
+<p>所以正确的写法应当是：</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fw3g9fst9kj30zy07jab0.jpg" alt=""></p>
+<blockquote>
+<p>至于为什么会只有参数一个有值，在下文的源码分析中会一一解释。</p>
+</blockquote>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><p>现在只掌握了基本的消息发送，想要深刻的理解发送中的一些参数配置还是得源码说了算。</p>
+<p>首先还是来谈谈消息发送时的整个流程是怎么样的，<code>Kafka</code> 并不是简单的把消息通过网络发送到了 <code>broker</code> 中，在 Java 内部还是经过了许多优化和设计。</p>
+<h2 id="发送流程"><a href="#发送流程" class="headerlink" title="发送流程"></a>发送流程</h2><p>为了直观的了解发送的流程，简单的画了几个在发送过程中关键的步骤。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fw3j5x05izj30a40btmxt.jpg" alt=""></p>
+<p>从上至下依次是：</p>
+<ul>
+<li>初始化以及真正发送消息的 <code>kafka-producer-network-thread</code> IO 线程。</li>
+<li>将消息序列化。</li>
+<li>得到需要发送的分区。</li>
+<li>写入内部的一个缓存区中。</li>
+<li>初始化的 IO 线程不断的消费这个缓存来发送消息。</li>
+</ul>
+<h2 id="步骤解析"><a href="#步骤解析" class="headerlink" title="步骤解析"></a>步骤解析</h2><p>接下来详解每个步骤。</p>
+<h3 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h3><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fw3jc9hvwbj30rc0273yn.jpg" alt=""></p>
+<p>调用该构造方法进行初始化时，不止是简单的将基本参数写入 <code>KafkaProducer</code>。比较麻烦的是初始化 <code>Sender</code> 线程进行缓冲区消费。</p>
+<p>初始化 IO 线程处：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fw3jh4xtt2j31fo02pgms.jpg" alt=""></p>
+<p>可以看到 Sender 线程有需要成员变量，比如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">acks,retries,requestTimeout</span><br></pre></td></tr></table></figure>
+<p>等，这些参数会在后文分析。</p>
+<h3 id="序列化消息"><a href="#序列化消息" class="headerlink" title="序列化消息"></a>序列化消息</h3><p>在调用 <code>send()</code> 函数后其实第一步就是序列化，毕竟我们的消息需要通过网络才能发送到 Kafka。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fw3job8ejaj31fw05owg2.jpg" alt=""></p>
+<p>其中的 <code>valueSerializer.serialize(record.topic(), record.value());</code> 是一个接口，我们需要在初始化时候指定序列化实现类。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fw3jq5h0nyj30p607oq4e.jpg" alt=""></p>
+<p>我们也可以自己实现序列化，只需要实现 <code>org.apache.kafka.common.serialization.Serializer</code> 接口即可。</p>
+<h3 id="路由分区"><a href="#路由分区" class="headerlink" title="路由分区"></a>路由分区</h3><p>接下来就是路由分区，通常我们使用的 <code>Topic</code> 为了实现扩展性以及高性能都会创建多个分区。</p>
+<p>如果是一个分区好说，所有消息都往里面写入即可。</p>
+<p>但多个分区就不可避免需要知道写入哪个分区。</p>
+<p>通常有三种方式。</p>
+<h4 id="指定分区"><a href="#指定分区" class="headerlink" title="指定分区"></a>指定分区</h4><p>可以在构建 <code>ProducerRecord</code> 为每条消息指定分区。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fw3jxiet6mj30pj06smyb.jpg" alt=""></p>
+<p>这样在路由时会判断是否有指定，有就直接使用该分区。</p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fw3jybsavdj30zj077abj.jpg" alt=""></p>
+<p>这种一般在特殊场景下会使用。</p>
+<h4 id="自定义路由策略"><a href="#自定义路由策略" class="headerlink" title="自定义路由策略"></a>自定义路由策略</h4><p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fw3k0giiy6j30zm079ta7.jpg" alt=""></p>
+<p>如果没有指定分区，则会调用 <code>partitioner.partition</code> 接口执行自定义分区策略。</p>
+<p>而我们也只需要自定义一个类实现 <code>org.apache.kafka.clients.producer.Partitioner</code> 接口，同时在创建 <code>KafkaProducer</code> 实例时配置 <code>partitioner.class</code> 参数。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fw3k5uqf68j30rm04pt94.jpg" alt=""></p>
+<p>通常需要自定义分区一般是在想尽量的保证消息的顺序性。</p>
+<p>或者是写入某些特有的分区，由特别的消费者来进行处理等。</p>
+<h4 id="默认策略"><a href="#默认策略" class="headerlink" title="默认策略"></a>默认策略</h4><p>最后一种则是默认的路由策略，如果我们啥都没做就会执行该策略。</p>
+<p>该策略也会使得消息分配的比较均匀。</p>
+<p>来看看它的实现：</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fw3kajn4iyj30r20g2772.jpg" alt=""></p>
+<p>简单的来说分为以下几步：</p>
+<ul>
+<li>获取 Topic 分区数。</li>
+<li>将内部维护的一个线程安全计数器 +1。</li>
+<li>与分区数取模得到分区编号。</li>
+</ul>
+<p>其实这就是很典型的轮询算法，所以只要分区数不频繁变动这种方式也会比较均匀。</p>
+<h3 id="写入内部缓存"><a href="#写入内部缓存" class="headerlink" title="写入内部缓存"></a>写入内部缓存</h3><p>在 <code>send()</code> 方法拿到分区后会调用一个 <code>append()</code> 函数：</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fw3khecuqej313704uwg9.jpg" alt=""></p>
+<p>该函数中会调用一个 <code>getOrCreateDeque()</code> 写入到一个内部缓存中 <code>batches</code>。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fw3kih9wf1j30j005daaq.jpg" alt=""></p>
+<h3 id="消费缓存"><a href="#消费缓存" class="headerlink" title="消费缓存"></a>消费缓存</h3><p>在最开始初始化的 IO 线程其实是一个守护线程，它会一直消费这些数据。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fw3kntf8xlj30sn0ju42o.jpg" alt=""></p>
+<p>通过图中的几个函数会获取到之前写入的数据。这块内容可以不必深究，但其中有个 <code>completeBatch</code> 方法却非常关键。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fw3kqrk5rnj312e0jbjve.jpg" alt=""></p>
+<p>调用该方法时候肯定已经是消息发送完毕了，所以会调用 <code>batch.done()</code> 来完成之前我们在 <code>send()</code> 方法中定义的回调接口。</p>
+<p><img src="https://ws4.sinaimg.cn/large/006tNbRwly1fw3kuprn02j30zo09qgnr.jpg" alt=""></p>
+<blockquote>
+<p>从这里也可以看出为什么之前说发送完成后元数据和异常信息只会出现一个。</p>
+</blockquote>
+<h1 id="Producer-参数解析"><a href="#Producer-参数解析" class="headerlink" title="Producer 参数解析"></a>Producer 参数解析</h1><p>发送流程讲完了再来看看 <code>Producer</code> 中比较重要的几个参数。</p>
+<h2 id="acks"><a href="#acks" class="headerlink" title="acks"></a>acks</h2><p><code>acks</code> 是一个影响消息吞吐量的一个关键参数。</p>
+<p><img src="https://ws2.sinaimg.cn/large/006tNbRwly1fw3l52birsj30u607o0ta.jpg" alt=""></p>
+<p>主要有 <code>[all、-1, 0, 1]</code> 这几个选项，默认为 1。</p>
+<p>由于 <code>Kafka</code> 不是采取的主备模式，而是采用类似于 Zookeeper 的主备模式。</p>
+<blockquote>
+<p>前提是 <code>Topic</code> 配置副本数量 <code>replica &gt; 1</code>。 </p>
+</blockquote>
+<p>当 <code>acks = all/-1</code> 时：</p>
+<p>意味着会确保所有的 follower 副本都完成数据的写入才会返回。</p>
+<p>这样可以保证消息不会丢失！</p>
+<blockquote>
+<p>但同时性能和吞吐量却是最低的。</p>
+</blockquote>
+<p>当 <code>acks = 0</code> 时：</p>
+<p>producer 不会等待副本的任何响应，这样最容易丢失消息但同时性能却是最好的！</p>
+<p>当 <code>acks = 1</code> 时：</p>
+<p>这是一种折中的方案，它会等待副本 Leader 响应，但不会等到 follower 的响应。</p>
+<p>一旦 Leader 挂掉消息就会丢失。但性能和消息安全性都得到了一定的保证。</p>
+<h2 id="batch-size"><a href="#batch-size" class="headerlink" title="batch.size"></a>batch.size</h2><p>这个参数看名称就知道是内部缓存区的大小限制，对他适当的调大可以提高吞吐量。</p>
+<p>但也不能极端，调太大会浪费内存。小了也发挥不了作用，也是一个典型的时间和空间的权衡。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fw3l2ydx4tj311l0e9ae3.jpg" alt=""></p>
+<p><img src="https://ws1.sinaimg.cn/large/006tNbRwly1fw3l3mh0pqj312409940u.jpg" alt=""></p>
+<p>上图是几个使用的体现。</p>
+<h2 id="retries"><a href="#retries" class="headerlink" title="retries"></a>retries</h2><p><code>retries</code> 该参数主要是来做重试使用，当发生一些网络抖动都会造成重试。</p>
+<p>这个参数也就是限制重试次数。</p>
+<p>但也有一些其他问题。</p>
+<ul>
+<li>因为是重发所以消息顺序可能不会一致，这也是上文提到就算是一个分区消息也不会是完全顺序的情况。</li>
+<li>还是由于网络问题，本来消息已经成功写入了但是没有成功响应给 producer，进行重试时就可能会出现<code>消息重复</code>。这种只能是消费者进行幂等处理。</li>
+</ul>
+<h1 id="高效的发送方式"><a href="#高效的发送方式" class="headerlink" title="高效的发送方式"></a>高效的发送方式</h1><p>如果消息量真的非常大，同时又需要尽快的将消息发送到 <code>Kafka</code>。一个 <code>producer</code> 始终会收到缓存大小等影响。</p>
+<p>那是否可以创建多个 <code>producer</code> 来进行发送呢？</p>
+<ul>
+<li>配置一个最大 producer 个数。</li>
+<li>发送消息时首先获取一个 <code>producer</code>，获取的同时判断是否达到最大上限，没有就新建一个同时保存到内部的 <code>List</code> 中，保存时做好同步处理防止并发问题。</li>
+<li>获取发送者时可以按照默认的分区策略使用轮询的方式获取（保证使用均匀）。</li>
+</ul>
+<p>这样在大量、频繁的消息发送场景中可以提高发送效率减轻单个 <code>producer</code> 的压力。</p>
+<h1 id="关闭-Producer"><a href="#关闭-Producer" class="headerlink" title="关闭 Producer"></a>关闭 Producer</h1><p>最后则是 <code>Producer</code> 的关闭，Producer 在使用过程中消耗了不少资源（线程、内存、网络等）因此需要显式的关闭从而回收这些资源。</p>
+<p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fw3mw4a00rj311x0kp434.jpg" alt=""></p>
+<p>默认的 <code>close()</code> 方法和带有超时时间的方法都是在一定的时间后强制关闭。</p>
+<p>但在过期之前都会处理完剩余的任务。</p>
+<p>所以使用哪一个得视情况而定。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>据说打赏我的人工资涨的比别人多~~~</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay_code.jpg" alt="大漠叔叔 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_code.jpg" alt="大漠叔叔 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/云服务/" rel="tag"># 云服务</a>
+          
+            <a href="/tags/消息队列/" rel="tag"># 消息队列</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/15/MessageQueueComparasion/" rel="next" title="常见消息队列比较">
+                <i class="fa fa-chevron-left"></i> 常见消息队列比较
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/18/UseGitLabDeployHexo2GitHub/" rel="prev" title="使用GitLab Ci 自动部署Hexo到GitHub">
+                使用GitLab Ci 自动部署Hexo到GitHub <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://bdimg.share.dt27.org/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/santi.png" alt="大漠叔叔">
+            
+              <p class="site-author-name" itemprop="name">大漠叔叔</p>
+              <p class="site-description motion-element" itemprop="description">KK's personal website for posting software technology</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/damoshushu" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="cctg2012@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://gitlab.com/damoshushu" target="_blank" title="GitLab">
+                      
+                        <i class="fa fa-fw fa-gitlab"></i>GitLab</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://netium.gitlab.io/" title="TechX 空间" target="_blank">TechX 空间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://xiaozhou.net/" title="iTimothy" target="_blank">iTimothy</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#简单的消息发送"><span class="nav-number">1.</span> <span class="nav-text">简单的消息发送</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#同步"><span class="nav-number">1.1.</span> <span class="nav-text">同步</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异步"><span class="nav-number">1.2.</span> <span class="nav-text">异步</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#发送流程"><span class="nav-number">2.1.</span> <span class="nav-text">发送流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#步骤解析"><span class="nav-number">2.2.</span> <span class="nav-text">步骤解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#初始化"><span class="nav-number">2.2.1.</span> <span class="nav-text">初始化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化消息"><span class="nav-number">2.2.2.</span> <span class="nav-text">序列化消息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#路由分区"><span class="nav-number">2.2.3.</span> <span class="nav-text">路由分区</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#指定分区"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">指定分区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#自定义路由策略"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">自定义路由策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#默认策略"><span class="nav-number">2.2.3.3.</span> <span class="nav-text">默认策略</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#写入内部缓存"><span class="nav-number">2.2.4.</span> <span class="nav-text">写入内部缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#消费缓存"><span class="nav-number">2.2.5.</span> <span class="nav-text">消费缓存</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Producer-参数解析"><span class="nav-number">3.</span> <span class="nav-text">Producer 参数解析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#acks"><span class="nav-number">3.1.</span> <span class="nav-text">acks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#batch-size"><span class="nav-number">3.2.</span> <span class="nav-text">batch.size</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#retries"><span class="nav-number">3.3.</span> <span class="nav-text">retries</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#高效的发送方式"><span class="nav-number">4.</span> <span class="nav-text">高效的发送方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关闭-Producer"><span class="nav-number">5.</span> <span class="nav-text">关闭 Producer</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">大漠叔叔</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

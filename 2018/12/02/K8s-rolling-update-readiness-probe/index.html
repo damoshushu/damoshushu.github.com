@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="云服务,K8S,微服务,RollingUpdate,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="缘起目前在做的一个项目采用Kubernetes(简称K8S)来管理容器，然而，最近发现在做升级部署的时候，有很少一部分请求会失败。这就不符合规矩了啊，按照道理说，使用K8S做Rolling Update，应该会无痛切换，平稳从Version A 升级到 Version B。  来，看图：  解决问题前，先磨叽磨叽，说几句废话，心急的可以跳过。点击直达  Rolling Update Zero-do">
+<meta name="keywords" content="云服务,K8S,微服务,RollingUpdate">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[K8S Rolling Update]说好的Zero-downtime 为什么down了呢？">
+<meta property="og:url" content="https://damoshushu.github.io/2018/12/02/K8s-rolling-update-readiness-probe/index.html">
+<meta property="og:site_name" content="大漠说程序">
+<meta property="og:description" content="缘起目前在做的一个项目采用Kubernetes(简称K8S)来管理容器，然而，最近发现在做升级部署的时候，有很少一部分请求会失败。这就不符合规矩了啊，按照道理说，使用K8S做Rolling Update，应该会无痛切换，平稳从Version A 升级到 Version B。  来，看图：  解决问题前，先磨叽磨叽，说几句废话，心急的可以跳过。点击直达  Rolling Update Zero-do">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/66aa1a41gy1fxepfw3c5gj208702c3ya.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/66aa1a41gy1fxq2u7ocgij208702rmwy.jpg">
+<meta property="og:updated_time" content="2019-01-12T10:18:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[K8S Rolling Update]说好的Zero-downtime 为什么down了呢？">
+<meta name="twitter:description" content="缘起目前在做的一个项目采用Kubernetes(简称K8S)来管理容器，然而，最近发现在做升级部署的时候，有很少一部分请求会失败。这就不符合规矩了啊，按照道理说，使用K8S做Rolling Update，应该会无痛切换，平稳从Version A 升级到 Version B。  来，看图：  解决问题前，先磨叽磨叽，说几句废话，心急的可以跳过。点击直达  Rolling Update Zero-do">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/66aa1a41gy1fxepfw3c5gj208702c3ya.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://damoshushu.github.io/2018/12/02/K8s-rolling-update-readiness-probe/">
+
+
+
+
+
+  <title>[K8S Rolling Update]说好的Zero-downtime 为什么down了呢？ | 大漠说程序</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">大漠说程序</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">大漠孤烟直，长河落日圆</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://damoshushu.github.io/2018/12/02/K8s-rolling-update-readiness-probe/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="大漠叔叔">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/santi.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大漠说程序">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[K8S Rolling Update]说好的Zero-downtime 为什么down了呢？</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-02T15:30:06+00:00">
+                2018-12-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/微服务/" itemprop="url" rel="index">
+                    <span itemprop="name">微服务</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  849
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  3
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h3><p>目前在做的一个项目采用<a href="https://kubernetes.io" target="_blank" rel="noopener">Kubernetes</a>(简称K8S)来管理容器，然而，最近发现在做升级部署的时候，有很少一部分请求会失败。这就不符合规矩了啊，按照道理说，使用K8S做<a href="https://kubernetes.io/docs/tasks/run-application/rolling-update-replication-controller/" target="_blank" rel="noopener">Rolling Update</a>，应该会无痛切换，平稳从Version A 升级到 Version B。 </p>
+<p>来，看图：<br><br> <img src="https://ws1.sinaimg.cn/large/66aa1a41gy1fxepfw3c5gj208702c3ya.jpg" alt=""></p>
+<p>解决问题前，先磨叽磨叽，说几句废话，心急的可以跳过。<br><a href="#故障分析">点击直达</a></p>
+<hr>
+<h3 id="Rolling-Update-Zero-downtime-原理"><a href="#Rolling-Update-Zero-downtime-原理" class="headerlink" title="Rolling Update Zero-downtime 原理"></a>Rolling Update Zero-downtime 原理</h3><p>K8S提供了一系列功能来支撑容器集群的自动化部署、扩容以及运维，其中一个功能便是今天要讲到的<a href="https://kubernetes.io/docs/tasks/run-application/rolling-update-replication-controller/" target="_blank" rel="noopener">Rolling Update</a>. 引用官方的一段话</p>
+<blockquote>
+<p>To update a service without an outage, kubectl supports what is called rolling update, which updates one pod at a time, rather than taking down the entire service at the same time.</p>
+</blockquote>
+<p>P.S: 目前官方不推荐使用“Replication Controllers”， 转而使用 <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#updating-a-deployment" target="_blank" rel="noopener">Deployment</a>，不过这里的原理是一样的。</p>
+<p>在K8S集群里面，一个<a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-initialization/" target="_blank" rel="noopener">Pod</a>里面的程序访问另一个Pod里面的程序，可以采用<a href="https://kubernetes.io/docs/tasks/access-application-cluster/service-access-application-cluster/" target="_blank" rel="noopener">Service</a>来实现，每一个Service都可以定义一个Selector来选择一系列Pod，当Service接收到请求后，它会转发给后面的Pod来处理。</p>
+<p>K8S 执行 Rolling Update的时候，Service是不会改变的，Rolling Update只针对Replication Controllers。具体步骤如下：</p>
+<ol>
+<li>K8S 创建一个新的Replication Controllers</li>
+<li>K8S 创建一个新的Pod</li>
+<li>K8S 等待Pod进入Ready状态</li>
+<li>K8S 把新的Pod加入Service</li>
+<li>K8S 更改老的Pod状态为Terminating，并把老Pod从Service中移除</li>
+<li>K8S 结束老的Pod</li>
+</ol>
+<p>其中K8S 等待Pod进入Ready状态是需要Pod提供一个Readiness探针，参见 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/" target="_blank" rel="noopener">Configure Liveness and Readiness Probes</a></p>
+<p>看似完美，可是为什么出问题了呢？</p>
+<h3 id="故障分析"><a href="#故障分析" class="headerlink" title="故障分析"></a>故障分析</h3><ul>
+<li>第一步，那一定是看日志，没毛病。<br>查看了一系列日志，发现在做音频转码的时候，报错 “connection refused”。 意识到转码服务在某一时刻是不工作的。</li>
+<li>第二步，查看转码服务工作原理，转码服务提供两个端口，分别对应于命令通道和数据通道。</li>
+<li>第三步，由于无法确认是在哪一个端口被拒绝了，于是启用Debug日志，发现是在连接数据通道的时候出问题了。</li>
+<li>第四步，分析，理论上来说只有在Pod Ready后，K8S才会把流量转交给这个Pod。那么什么情况下会在K8S会把流量转交给一个没有Ready的Pod呢？</li>
+<li>第五步，查看Readiness定义, 这个Component提供了两个Port，一个用于控制命令，一个用于数据命令。问题就出在这里了，Readiness probe采用了tcpSocket类型的probe,<a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-a-tcp-liveness-probe" target="_blank" rel="noopener"> (详见)</a> 但是这里只能配置一个端口，在某种极端情况下，两个端口的就绪时间可能不一致，导致了K8S探测到component已经就绪，但实际上有一个端口没有就绪。从而导致个别请求失败。</li>
+</ul>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>内部实现 readiness http api并暴露给K8S</li>
+<li>或者 采用exec + command 类型的probe, component内部检测到端口就绪后，写一个ready文件到磁盘。 <a href="https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-a-liveness-command" target="_blank" rel="noopener">详见</a></li>
+<li>或者 延长 “initialDelaySeconds” 来等待component 就绪（不推荐）<blockquote>
+<p>p.s:<br>“initialDelaySeconds” 是指 Pod处于running状态后，K8S等待多少秒开始第一次执行readiness probe。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>自此，Rolling Update的问题完美解决了。Kubernetes 作为一个容器管理系统，还是很强大的。</p>
+<p>成功图：<br><br><img src="https://ws1.sinaimg.cn/large/66aa1a41gy1fxq2u7ocgij208702rmwy.jpg" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>据说打赏我的人工资涨的比别人多~~~</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay_code.jpg" alt="大漠叔叔 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_code.jpg" alt="大漠叔叔 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/云服务/" rel="tag"># 云服务</a>
+          
+            <a href="/tags/K8S/" rel="tag"># K8S</a>
+          
+            <a href="/tags/微服务/" rel="tag"># 微服务</a>
+          
+            <a href="/tags/RollingUpdate/" rel="tag"># RollingUpdate</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/18/UseGitLabDeployHexo2GitHub/" rel="next" title="使用GitLab Ci 自动部署Hexo到GitHub">
+                <i class="fa fa-chevron-left"></i> 使用GitLab Ci 自动部署Hexo到GitHub
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/12/k8s-terminationGracePeriodSeconds/" rel="prev" title="[K8S] 如何利用terminationGracePeriodSeconds 优雅地关闭你的服务？">
+                [K8S] 如何利用terminationGracePeriodSeconds 优雅地关闭你的服务？ <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://bdimg.share.dt27.org/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/santi.png" alt="大漠叔叔">
+            
+              <p class="site-author-name" itemprop="name">大漠叔叔</p>
+              <p class="site-description motion-element" itemprop="description">KK's personal website for posting software technology</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/damoshushu" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="cctg2012@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://gitlab.com/damoshushu" target="_blank" title="GitLab">
+                      
+                        <i class="fa fa-fw fa-gitlab"></i>GitLab</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://netium.gitlab.io/" title="TechX 空间" target="_blank">TechX 空间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://xiaozhou.net/" title="iTimothy" target="_blank">iTimothy</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#缘起"><span class="nav-number">1.</span> <span class="nav-text">缘起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Rolling-Update-Zero-downtime-原理"><span class="nav-number">2.</span> <span class="nav-text">Rolling Update Zero-downtime 原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#故障分析"><span class="nav-number">3.</span> <span class="nav-text">故障分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方案"><span class="nav-number">4.</span> <span class="nav-text">解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结论"><span class="nav-number">5.</span> <span class="nav-text">结论</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">大漠叔叔</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
