@@ -1,0 +1,1958 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon.ico?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="AI,大模型,编程," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="国内外大模型编程能力全面对比（2026年6月）一、核心基准测试对比1.1 主流编码基准测试说明   基准测试 测试内容 难度等级 区分度    SWE-bench Verified 真实GitHub仓库Issue修复，需理解代码库、定位问题、生成补丁 ⭐⭐⭐⭐⭐ 高，当前最权威的工程能力测试   LiveCodeBench 实时更新的竞赛编程题，无污染问题 ⭐⭐⭐⭐ 高，算法能力黄金标准   Hu">
+<meta property="og:type" content="article">
+<meta property="og:title" content="最新大模型编程能力对比">
+<meta property="og:url" content="https://damoshushu.github.io/2026/06/27/llm-compare-coding/index.html">
+<meta property="og:site_name" content="大漠说程序">
+<meta property="og:description" content="国内外大模型编程能力全面对比（2026年6月）一、核心基准测试对比1.1 主流编码基准测试说明   基准测试 测试内容 难度等级 区分度    SWE-bench Verified 真实GitHub仓库Issue修复，需理解代码库、定位问题、生成补丁 ⭐⭐⭐⭐⭐ 高，当前最权威的工程能力测试   LiveCodeBench 实时更新的竞赛编程题，无污染问题 ⭐⭐⭐⭐ 高，算法能力黄金标准   Hu">
+<meta property="og:locale">
+<meta property="article:published_time" content="2026-06-27T15:30:06.000Z">
+<meta property="article:modified_time" content="2026-06-28T09:02:32.498Z">
+<meta property="article:author" content="大漠叔叔">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="编程">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://damoshushu.github.io/2026/06/27/llm-compare-coding/"/>
+
+
+
+
+
+  <title>最新大模型编程能力对比 | 大漠说程序</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">大漠说程序</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">大漠孤烟直，长河落日圆</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/%20" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://damoshushu.github.io/2026/06/27/llm-compare-coding/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/santi.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="大漠说程序">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">最新大模型编程能力对比</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2026-06-27T15:30:06+00:00">
+                2026-06-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index">
+                    <span itemprop="name">AI</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="国内外大模型编程能力全面对比（2026年6月）"><a href="#国内外大模型编程能力全面对比（2026年6月）" class="headerlink" title="国内外大模型编程能力全面对比（2026年6月）"></a>国内外大模型编程能力全面对比（2026年6月）</h1><h2 id="一、核心基准测试对比"><a href="#一、核心基准测试对比" class="headerlink" title="一、核心基准测试对比"></a>一、核心基准测试对比</h2><h3 id="1-1-主流编码基准测试说明"><a href="#1-1-主流编码基准测试说明" class="headerlink" title="1.1 主流编码基准测试说明"></a>1.1 主流编码基准测试说明</h3><table>
+<thead>
+<tr>
+<th>基准测试</th>
+<th>测试内容</th>
+<th>难度等级</th>
+<th>区分度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SWE-bench Verified</strong></td>
+<td>真实GitHub仓库Issue修复，需理解代码库、定位问题、生成补丁</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>高，当前最权威的工程能力测试</td>
+</tr>
+<tr>
+<td><strong>LiveCodeBench</strong></td>
+<td>实时更新的竞赛编程题，无污染问题</td>
+<td>⭐⭐⭐⭐</td>
+<td>高，算法能力黄金标准</td>
+</tr>
+<tr>
+<td><strong>HumanEval</strong></td>
+<td>164道Python函数补全题</td>
+<td>⭐⭐</td>
+<td>低，顶级模型已饱和（96%+）</td>
+</tr>
+<tr>
+<td><strong>MBPP</strong></td>
+<td>974道入门级Python编程题</td>
+<td>⭐</td>
+<td>极低，仅作入门筛选</td>
+</tr>
+<tr>
+<td><strong>HumanEval+</strong></td>
+<td>HumanEval增强版，更多隐藏测试用例</td>
+<td>⭐⭐⭐</td>
+<td>中，可检测过拟合</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>说明</strong>：HumanEval和MBPP在2026年已基本失去区分度，所有前沿模型pass@1均超过90%，SWE-bench和LiveCodeBench是当前衡量真实编程能力的核心指标。</p>
+</blockquote>
+<h3 id="1-2-第一梯队模型基准成绩对比"><a href="#1-2-第一梯队模型基准成绩对比" class="headerlink" title="1.2 第一梯队模型基准成绩对比"></a>1.2 第一梯队模型基准成绩对比</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>SWE-bench Verified</th>
+<th>LiveCodeBench</th>
+<th>HumanEval pass@1</th>
+<th>上下文窗口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>74.5% ~ 88%</td>
+<td>~72%</td>
+<td>96%+</td>
+<td>1M tokens</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V4 Pro</strong></td>
+<td>70.3% ~ 81%</td>
+<td>73.4%</td>
+<td>95%+</td>
+<td>128K tokens</td>
+</tr>
+<tr>
+<td><strong>GPT-5.4</strong></td>
+<td>57.7% ~ 68.2%</td>
+<td>~70%</td>
+<td>89.2% ~ 96.1%</td>
+<td>1.05M tokens</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5 标准版</strong></td>
+<td>~58.6%</td>
+<td>~71%</td>
+<td>95%+</td>
+<td>1.05M tokens</td>
+</tr>
+<tr>
+<td><strong>Gemini 3.1 Pro</strong></td>
+<td>54.2% ~ 75%</td>
+<td>~69%</td>
+<td>85.5% ~ 94%</td>
+<td>1M tokens</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>~60%</td>
+<td>~65%</td>
+<td>93%+</td>
+<td>1M tokens</td>
+</tr>
+<tr>
+<td><strong>Qwen3.7-Max</strong></td>
+<td>~65%</td>
+<td>~63%</td>
+<td>92%+</td>
+<td>128K tokens</td>
+</tr>
+<tr>
+<td><strong>GLM-5.1</strong></td>
+<td>~62%</td>
+<td>~60%</td>
+<td>91%+</td>
+<td>128K tokens</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>数据来源：SWE-bench官方、LiveCodeBench官方、各厂商技术博客及第三方评测（2026年4-6月）</p>
+</blockquote>
+<h3 id="1-3-国内模型编程能力梯队"><a href="#1-3-国内模型编程能力梯队" class="headerlink" title="1.3 国内模型编程能力梯队"></a>1.3 国内模型编程能力梯队</h3><table>
+<thead>
+<tr>
+<th>梯队</th>
+<th>代表模型</th>
+<th>SWE-bench预估</th>
+<th>核心特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>第一梯队</strong></td>
+<td>DeepSeek V4 Pro</td>
+<td>70%+</td>
+<td>国产编程天花板，算法能力突出，性价比极高</td>
+</tr>
+<tr>
+<td><strong>第二梯队</strong></td>
+<td>通义千问Qwen3.7-Max、豆包Seed 2.0 Pro</td>
+<td>60-65%</td>
+<td>综合能力强，中文语境适配好</td>
+</tr>
+<tr>
+<td><strong>第三梯队</strong></td>
+<td>GLM-5.1、Kimi K2.6</td>
+<td>55-60%</td>
+<td>长文本优势，日常开发够用</td>
+</tr>
+<tr>
+<td><strong>轻量梯队</strong></td>
+<td>DeepSeek V3、Qwen3.5-Flash、GLM-4-Flash</td>
+<td>40-50%</td>
+<td>速度快，价格极低，适合简单任务</td>
+</tr>
+</tbody></table>
+<h2 id="二、代码生成速度对比"><a href="#二、代码生成速度对比" class="headerlink" title="二、代码生成速度对比"></a>二、代码生成速度对比</h2><h3 id="2-1-云端API推理速度"><a href="#2-1-云端API推理速度" class="headerlink" title="2.1 云端API推理速度"></a>2.1 云端API推理速度</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输出速度（tokens&#x2F;s）</th>
+<th>首字延迟</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GPT-5.5 标准版</strong></td>
+<td>240+</td>
+<td>~300ms</td>
+<td>实时补全、快速迭代</td>
+</tr>
+<tr>
+<td><strong>Claude Haiku 4.5</strong></td>
+<td>200+</td>
+<td>~250ms</td>
+<td>简单代码生成、分类任务</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V3</strong></td>
+<td>180+</td>
+<td>~280ms</td>
+<td>高性价比批量编码</td>
+</tr>
+<tr>
+<td><strong>Gemini 2.5 Flash</strong></td>
+<td>160+</td>
+<td>~350ms</td>
+<td>多语言快速原型</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>120-150</td>
+<td>~400ms</td>
+<td>日常开发主力</td>
+</tr>
+<tr>
+<td><strong>Qwen3.5-Flash</strong></td>
+<td>150+</td>
+<td>~300ms</td>
+<td>国内低延迟首选</td>
+</tr>
+<tr>
+<td><strong>GPT-5.4 Codex</strong></td>
+<td>100-130</td>
+<td>~500ms</td>
+<td>专业编程场景</td>
+</tr>
+<tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>60-90</td>
+<td>~800ms</td>
+<td>复杂架构、深度推理</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5 Pro</strong></td>
+<td>40-70</td>
+<td>~1200ms</td>
+<td>顶级复杂问题求解</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：速度数据为典型环境下的输出token速率，实际速度受网络、请求并发、上下文长度影响较大。</p>
+</blockquote>
+<h3 id="2-2-开源模型本地推理速度（A100-80G）"><a href="#2-2-开源模型本地推理速度（A100-80G）" class="headerlink" title="2.2 开源模型本地推理速度（A100 80G）"></a>2.2 开源模型本地推理速度（A100 80G）</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>参数规模</th>
+<th>HumanEval pass@1</th>
+<th>推理速度（tokens&#x2F;s）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Code Llama 34B</strong></td>
+<td>34B</td>
+<td>67.1%</td>
+<td>18.2</td>
+</tr>
+<tr>
+<td><strong>StarCoder 15.5B</strong></td>
+<td>15.5B</td>
+<td>33.8%</td>
+<td>22.5</td>
+</tr>
+<tr>
+<td><strong>CodeGeeX2 13B</strong></td>
+<td>13B</td>
+<td>35.9%</td>
+<td>25.3</td>
+</tr>
+<tr>
+<td><strong>Qwen3-Coder 7B</strong></td>
+<td>7B</td>
+<td>~55%</td>
+<td>40+</td>
+</tr>
+<tr>
+<td><strong>DeepSeek-Coder V2 7B</strong></td>
+<td>7B</td>
+<td>~60%</td>
+<td>38+</td>
+</tr>
+</tbody></table>
+<h2 id="三、各模型编程特点与擅长领域"><a href="#三、各模型编程特点与擅长领域" class="headerlink" title="三、各模型编程特点与擅长领域"></a>三、各模型编程特点与擅长领域</h2><h3 id="3-1-海外旗舰模型"><a href="#3-1-海外旗舰模型" class="headerlink" title="3.1 海外旗舰模型"></a>3.1 海外旗舰模型</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>编程风格</th>
+<th>最强领域</th>
+<th>短板</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>严谨细致，注释详尽，自动考虑边界条件和错误处理</td>
+<td>系统架构设计、大型重构、代码审查、多文件工程</td>
+<td>速度偏慢，价格高</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5</strong></td>
+<td>快速直接，落地性强，擅长期望管理和假设填充</td>
+<td>算法竞赛、DevOps、终端CLI、Agent自动化</td>
+<td>复杂多文件工程略逊于Claude</td>
+</tr>
+<tr>
+<td><strong>Gemini 3.1 Pro</strong></td>
+<td>代码简洁，API记忆准确，Google生态深度集成</td>
+<td>Python数据科学、GCP开发、移动端、Rust&#x2F;C++</td>
+<td>多文件重构能力一般</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>稳定可靠，低级错误极少，代码规范度高</td>
+<td>日常全栈开发、单文件功能、Bug修复</td>
+<td>超难算法略弱于旗舰</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-国产主力模型"><a href="#3-2-国产主力模型" class="headerlink" title="3.2 国产主力模型"></a>3.2 国产主力模型</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>编程风格</th>
+<th>最强领域</th>
+<th>短板</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>DeepSeek V4 Pro</strong></td>
+<td>逻辑严密，算法能力突出，数学建模强</td>
+<td>算法题、数据结构、科学计算、后端开发</td>
+<td>长上下文略弱，英文生态一般</td>
+</tr>
+<tr>
+<td><strong>通义千问 Qwen3.7-Max</strong></td>
+<td>中文注释友好，框架适配全面</td>
+<td>国内技术栈、前端开发、中文项目文档</td>
+<td>超复杂工程略逊于海外旗舰</td>
+</tr>
+<tr>
+<td><strong>豆包 Seed 2.0 Pro</strong></td>
+<td>理解中文需求精准，工具调用稳定</td>
+<td>业务系统开发、SQL优化、国内云服务</td>
+<td>极底层系统编程较弱</td>
+</tr>
+</tbody></table>
+<h2 id="四、API收费价格对比"><a href="#四、API收费价格对比" class="headerlink" title="四、API收费价格对比"></a>四、API收费价格对比</h2><h3 id="4-1-海外模型价格（美元-百万-Tokens）"><a href="#4-1-海外模型价格（美元-百万-Tokens）" class="headerlink" title="4.1 海外模型价格（美元 &#x2F; 百万 Tokens）"></a>4.1 海外模型价格（美元 &#x2F; 百万 Tokens）</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输入价格</th>
+<th>输出价格</th>
+<th>缓存输入价</th>
+<th>上下文</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GPT-5.5 Pro</strong></td>
+<td>$30.00</td>
+<td>$180.00</td>
+<td>—</td>
+<td>1.05M</td>
+</tr>
+<tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>$5.00</td>
+<td>$25.00</td>
+<td>$0.50</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5</strong></td>
+<td>$5.00</td>
+<td>$30.00</td>
+<td>$0.50</td>
+<td>1.05M</td>
+</tr>
+<tr>
+<td><strong>GPT-5.4 Codex</strong></td>
+<td>$1.75</td>
+<td>$14.00</td>
+<td>—</td>
+<td>400K</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>$3.00</td>
+<td>$15.00</td>
+<td>$0.30</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>Gemini 2.5 Pro</strong></td>
+<td>$1.25</td>
+<td>$10.00</td>
+<td>—</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>GPT-4o mini</strong></td>
+<td>$0.15</td>
+<td>$0.60</td>
+<td>—</td>
+<td>128K</td>
+</tr>
+<tr>
+<td><strong>Gemini Flash</strong></td>
+<td>$0.075</td>
+<td>$0.30</td>
+<td>—</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>Claude Haiku</strong></td>
+<td>$0.80</td>
+<td>$4.00</td>
+<td>—</td>
+<td>200K</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-国内模型价格（人民币-百万-Tokens）"><a href="#4-2-国内模型价格（人民币-百万-Tokens）" class="headerlink" title="4.2 国内模型价格（人民币 &#x2F; 百万 Tokens）"></a>4.2 国内模型价格（人民币 &#x2F; 百万 Tokens）</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输入价格</th>
+<th>输出价格</th>
+<th>提供商</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>DeepSeek V4 Pro</strong></td>
+<td>~2.0</td>
+<td>~8.0</td>
+<td>深度求索</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V3</strong></td>
+<td>~0.5</td>
+<td>~2.0</td>
+<td>深度求索</td>
+</tr>
+<tr>
+<td><strong>豆包 Seed 2.0 Pro</strong></td>
+<td>3.2 &#x2F; 4.8 &#x2F; 9.6（阶梯）</td>
+<td>16 &#x2F; 24 &#x2F; 48（阶梯）</td>
+<td>火山引擎</td>
+</tr>
+<tr>
+<td><strong>豆包 Seed 2.0 Lite</strong></td>
+<td>0.6</td>
+<td>3.6</td>
+<td>火山引擎</td>
+</tr>
+<tr>
+<td><strong>通义千问 Qwen3.5-Flash</strong></td>
+<td>0.2</td>
+<td>2.0</td>
+<td>阿里云</td>
+</tr>
+<tr>
+<td><strong>通义千问 Qwen3.7-Max</strong></td>
+<td>~4.0</td>
+<td>~16.0</td>
+<td>阿里云</td>
+</tr>
+<tr>
+<td><strong>GLM-4-Flash</strong></td>
+<td>免费</td>
+<td>免费</td>
+<td>智谱AI</td>
+</tr>
+<tr>
+<td><strong>Kimi K2.6</strong></td>
+<td>6.5</td>
+<td>27</td>
+<td>月之暗面</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：国内模型价格波动较大，各平台常有折扣活动，实际成本通常低于标价。</p>
+</blockquote>
+<h3 id="4-3-月度使用成本估算（按开发者日均使用）"><a href="#4-3-月度使用成本估算（按开发者日均使用）" class="headerlink" title="4.3 月度使用成本估算（按开发者日均使用）"></a>4.3 月度使用成本估算（按开发者日均使用）</h3><table>
+<thead>
+<tr>
+<th>使用强度</th>
+<th>日均Token消耗</th>
+<th>Claude Opus月成本</th>
+<th>GPT-5.5月成本</th>
+<th>DeepSeek月成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>轻度使用</strong></td>
+<td>50K输入 &#x2F; 10K输出</td>
+<td>~$11.5</td>
+<td>~$12</td>
+<td>~$0.6</td>
+</tr>
+<tr>
+<td><strong>中度使用</strong></td>
+<td>200K输入 &#x2F; 50K输出</td>
+<td>~$42.5</td>
+<td>~$50</td>
+<td>~$2.2</td>
+</tr>
+<tr>
+<td><strong>重度使用</strong></td>
+<td>1M输入 &#x2F; 300K输出</td>
+<td>~$125</td>
+<td>~$230</td>
+<td>~$11</td>
+</tr>
+<tr>
+<td><strong>团队级(10人)</strong></td>
+<td>10M输入 &#x2F; 3M输出</td>
+<td>~$1,250</td>
+<td>~$2,300</td>
+<td>~$110</td>
+</tr>
+</tbody></table>
+<h2 id="五、选型建议"><a href="#五、选型建议" class="headerlink" title="五、选型建议"></a>五、选型建议</h2><h3 id="5-1-按场景推荐"><a href="#5-1-按场景推荐" class="headerlink" title="5.1 按场景推荐"></a>5.1 按场景推荐</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>首选模型</th>
+<th>备选模型</th>
+<th>核心理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>复杂系统架构设计</strong></td>
+<td>Claude Opus 4.8</td>
+<td>GPT-5.5 Pro</td>
+<td>深度推理 + 多文件理解能力最强</td>
+</tr>
+<tr>
+<td><strong>算法竞赛 &#x2F; LeetCode困难题</strong></td>
+<td>DeepSeek V4 Pro</td>
+<td>GPT-5.5</td>
+<td>算法能力顶尖，性价比极高</td>
+</tr>
+<tr>
+<td><strong>日常全栈开发</strong></td>
+<td>Claude Sonnet 4.6</td>
+<td>GPT-5.4 Codex</td>
+<td>稳定、错误率低、速度够用</td>
+</tr>
+<tr>
+<td><strong>快速原型 &#x2F; 代码补全</strong></td>
+<td>GPT-5.5 标准版</td>
+<td>Qwen3.5-Flash</td>
+<td>速度最快，体验流畅</td>
+</tr>
+<tr>
+<td><strong>预算有限 &#x2F; 批量任务</strong></td>
+<td>DeepSeek V3</td>
+<td>Qwen3.5-Flash</td>
+<td>价格仅为海外旗舰1&#x2F;20，性能达80%</td>
+</tr>
+<tr>
+<td><strong>中文项目 &#x2F; 国内技术栈</strong></td>
+<td>通义千问 Qwen3.7-Max</td>
+<td>豆包 Seed 2.0 Pro</td>
+<td>中文理解精准，合规性好</td>
+</tr>
+<tr>
+<td><strong>开源私有化部署</strong></td>
+<td>Qwen3-Coder</td>
+<td>DeepSeek-Coder V2</td>
+<td>开源协议友好，性能够用</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-关键结论"><a href="#5-2-关键结论" class="headerlink" title="5.2 关键结论"></a>5.2 关键结论</h3><ol>
+<li><p><strong>编程能力第一梯队已形成</strong>：Claude Opus、DeepSeek V4 Pro、GPT-5.x 处于第一梯队，SWE-bench均在70%以上，彼此差距在5-10个百分点内。</p>
+</li>
+<li><p><strong>国产模型性价比碾压</strong>：DeepSeek V3&#x2F;V4 价格仅为海外同类模型的1&#x2F;10~1&#x2F;20，性能差距已缩小到可接受范围，是成本敏感场景的首选。</p>
+</li>
+<li><p><strong>HumanEval已无参考价值</strong>：所有主流模型pass@1均超过90%，区分度极低，评估真实工程能力请重点参考 SWE-bench 和 LiveCodeBench。</p>
+</li>
+<li><p><strong>速度与质量成反比</strong>：通常推理质量越高的模型速度越慢。日常开发建议用中速模型（Sonnet&#x2F;GPT-5.5）作为主力，遇到难题再切换旗舰模型。</p>
+</li>
+</ol>
+<hr>
+<blockquote>
+<p>数据更新时间：2026年6月。模型性能和价格变动较快，建议选型前以官方最新数据为准。</p>
+</blockquote>
+<h2 id="需要我针对某个具体模型或特定编程语言（如Python、Java、C-）做更深入的对比分析吗？—title-‘最新大模型编程能力对比’date-2026-06-27-15-30-06tags-AI-大模型-编程-categories-AI"><a href="#需要我针对某个具体模型或特定编程语言（如Python、Java、C-）做更深入的对比分析吗？—title-‘最新大模型编程能力对比’date-2026-06-27-15-30-06tags-AI-大模型-编程-categories-AI" class="headerlink" title="需要我针对某个具体模型或特定编程语言（如Python、Java、C++）做更深入的对比分析吗？—title: ‘最新大模型编程能力对比’date: 2026-06-27 15:30:06tags: [AI,大模型,编程]categories: AI"></a>需要我针对某个具体模型或特定编程语言（如Python、Java、C++）做更深入的对比分析吗？—<br>title: ‘最新大模型编程能力对比’<br>date: 2026-06-27 15:30:06<br>tags: [AI,大模型,编程]<br>categories: AI</h2><h1 id="国内外大模型编程能力全面对比（2026年6月）-1"><a href="#国内外大模型编程能力全面对比（2026年6月）-1" class="headerlink" title="国内外大模型编程能力全面对比（2026年6月）"></a>国内外大模型编程能力全面对比（2026年6月）</h1><h2 id="一、核心基准测试对比-1"><a href="#一、核心基准测试对比-1" class="headerlink" title="一、核心基准测试对比"></a>一、核心基准测试对比</h2><h3 id="1-1-主流编码基准测试说明-1"><a href="#1-1-主流编码基准测试说明-1" class="headerlink" title="1.1 主流编码基准测试说明"></a>1.1 主流编码基准测试说明</h3><table>
+<thead>
+<tr>
+<th>基准测试</th>
+<th>测试内容</th>
+<th>难度等级</th>
+<th>区分度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>SWE-bench Verified</strong></td>
+<td>真实GitHub仓库Issue修复，需理解代码库、定位问题、生成补丁</td>
+<td>⭐⭐⭐⭐⭐</td>
+<td>高，当前最权威的工程能力测试</td>
+</tr>
+<tr>
+<td><strong>LiveCodeBench</strong></td>
+<td>实时更新的竞赛编程题，无污染问题</td>
+<td>⭐⭐⭐⭐</td>
+<td>高，算法能力黄金标准</td>
+</tr>
+<tr>
+<td><strong>HumanEval</strong></td>
+<td>164道Python函数补全题</td>
+<td>⭐⭐</td>
+<td>低，顶级模型已饱和（96%+）</td>
+</tr>
+<tr>
+<td><strong>MBPP</strong></td>
+<td>974道入门级Python编程题</td>
+<td>⭐</td>
+<td>极低，仅作入门筛选</td>
+</tr>
+<tr>
+<td><strong>HumanEval+</strong></td>
+<td>HumanEval增强版，更多隐藏测试用例</td>
+<td>⭐⭐⭐</td>
+<td>中，可检测过拟合</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>说明</strong>：HumanEval和MBPP在2026年已基本失去区分度，所有前沿模型pass@1均超过90%，SWE-bench和LiveCodeBench是当前衡量真实编程能力的核心指标。</p>
+</blockquote>
+<h3 id="1-2-第一梯队模型基准成绩对比-1"><a href="#1-2-第一梯队模型基准成绩对比-1" class="headerlink" title="1.2 第一梯队模型基准成绩对比"></a>1.2 第一梯队模型基准成绩对比</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>SWE-bench Verified</th>
+<th>LiveCodeBench</th>
+<th>HumanEval pass@1</th>
+<th>上下文窗口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>74.5% ~ 88%</td>
+<td>~72%</td>
+<td>96%+</td>
+<td>1M tokens</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V4 Pro</strong></td>
+<td>70.3% ~ 81%</td>
+<td>73.4%</td>
+<td>95%+</td>
+<td>128K tokens</td>
+</tr>
+<tr>
+<td><strong>GPT-5.4</strong></td>
+<td>57.7% ~ 68.2%</td>
+<td>~70%</td>
+<td>89.2% ~ 96.1%</td>
+<td>1.05M tokens</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5 标准版</strong></td>
+<td>~58.6%</td>
+<td>~71%</td>
+<td>95%+</td>
+<td>1.05M tokens</td>
+</tr>
+<tr>
+<td><strong>Gemini 3.1 Pro</strong></td>
+<td>54.2% ~ 75%</td>
+<td>~69%</td>
+<td>85.5% ~ 94%</td>
+<td>1M tokens</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>~60%</td>
+<td>~65%</td>
+<td>93%+</td>
+<td>1M tokens</td>
+</tr>
+<tr>
+<td><strong>Qwen3.7-Max</strong></td>
+<td>~65%</td>
+<td>~63%</td>
+<td>92%+</td>
+<td>128K tokens</td>
+</tr>
+<tr>
+<td><strong>GLM-5.1</strong></td>
+<td>~62%</td>
+<td>~60%</td>
+<td>91%+</td>
+<td>128K tokens</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>数据来源：SWE-bench官方、LiveCodeBench官方、各厂商技术博客及第三方评测（2026年4-6月）</p>
+</blockquote>
+<h3 id="1-3-国内模型编程能力梯队-1"><a href="#1-3-国内模型编程能力梯队-1" class="headerlink" title="1.3 国内模型编程能力梯队"></a>1.3 国内模型编程能力梯队</h3><table>
+<thead>
+<tr>
+<th>梯队</th>
+<th>代表模型</th>
+<th>SWE-bench预估</th>
+<th>核心特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>第一梯队</strong></td>
+<td>DeepSeek V4 Pro</td>
+<td>70%+</td>
+<td>国产编程天花板，算法能力突出，性价比极高</td>
+</tr>
+<tr>
+<td><strong>第二梯队</strong></td>
+<td>通义千问Qwen3.7-Max、豆包Seed 2.0 Pro</td>
+<td>60-65%</td>
+<td>综合能力强，中文语境适配好</td>
+</tr>
+<tr>
+<td><strong>第三梯队</strong></td>
+<td>GLM-5.1、Kimi K2.6</td>
+<td>55-60%</td>
+<td>长文本优势，日常开发够用</td>
+</tr>
+<tr>
+<td><strong>轻量梯队</strong></td>
+<td>DeepSeek V3、Qwen3.5-Flash、GLM-4-Flash</td>
+<td>40-50%</td>
+<td>速度快，价格极低，适合简单任务</td>
+</tr>
+</tbody></table>
+<h2 id="二、代码生成速度对比-1"><a href="#二、代码生成速度对比-1" class="headerlink" title="二、代码生成速度对比"></a>二、代码生成速度对比</h2><h3 id="2-1-云端API推理速度-1"><a href="#2-1-云端API推理速度-1" class="headerlink" title="2.1 云端API推理速度"></a>2.1 云端API推理速度</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输出速度（tokens&#x2F;s）</th>
+<th>首字延迟</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GPT-5.5 标准版</strong></td>
+<td>240+</td>
+<td>~300ms</td>
+<td>实时补全、快速迭代</td>
+</tr>
+<tr>
+<td><strong>Claude Haiku 4.5</strong></td>
+<td>200+</td>
+<td>~250ms</td>
+<td>简单代码生成、分类任务</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V3</strong></td>
+<td>180+</td>
+<td>~280ms</td>
+<td>高性价比批量编码</td>
+</tr>
+<tr>
+<td><strong>Gemini 2.5 Flash</strong></td>
+<td>160+</td>
+<td>~350ms</td>
+<td>多语言快速原型</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>120-150</td>
+<td>~400ms</td>
+<td>日常开发主力</td>
+</tr>
+<tr>
+<td><strong>Qwen3.5-Flash</strong></td>
+<td>150+</td>
+<td>~300ms</td>
+<td>国内低延迟首选</td>
+</tr>
+<tr>
+<td><strong>GPT-5.4 Codex</strong></td>
+<td>100-130</td>
+<td>~500ms</td>
+<td>专业编程场景</td>
+</tr>
+<tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>60-90</td>
+<td>~800ms</td>
+<td>复杂架构、深度推理</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5 Pro</strong></td>
+<td>40-70</td>
+<td>~1200ms</td>
+<td>顶级复杂问题求解</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：速度数据为典型环境下的输出token速率，实际速度受网络、请求并发、上下文长度影响较大。</p>
+</blockquote>
+<h3 id="2-2-开源模型本地推理速度（A100-80G）-1"><a href="#2-2-开源模型本地推理速度（A100-80G）-1" class="headerlink" title="2.2 开源模型本地推理速度（A100 80G）"></a>2.2 开源模型本地推理速度（A100 80G）</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>参数规模</th>
+<th>HumanEval pass@1</th>
+<th>推理速度（tokens&#x2F;s）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Code Llama 34B</strong></td>
+<td>34B</td>
+<td>67.1%</td>
+<td>18.2</td>
+</tr>
+<tr>
+<td><strong>StarCoder 15.5B</strong></td>
+<td>15.5B</td>
+<td>33.8%</td>
+<td>22.5</td>
+</tr>
+<tr>
+<td><strong>CodeGeeX2 13B</strong></td>
+<td>13B</td>
+<td>35.9%</td>
+<td>25.3</td>
+</tr>
+<tr>
+<td><strong>Qwen3-Coder 7B</strong></td>
+<td>7B</td>
+<td>~55%</td>
+<td>40+</td>
+</tr>
+<tr>
+<td><strong>DeepSeek-Coder V2 7B</strong></td>
+<td>7B</td>
+<td>~60%</td>
+<td>38+</td>
+</tr>
+</tbody></table>
+<h2 id="三、各模型编程特点与擅长领域-1"><a href="#三、各模型编程特点与擅长领域-1" class="headerlink" title="三、各模型编程特点与擅长领域"></a>三、各模型编程特点与擅长领域</h2><h3 id="3-1-海外旗舰模型-1"><a href="#3-1-海外旗舰模型-1" class="headerlink" title="3.1 海外旗舰模型"></a>3.1 海外旗舰模型</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>编程风格</th>
+<th>最强领域</th>
+<th>短板</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>严谨细致，注释详尽，自动考虑边界条件和错误处理</td>
+<td>系统架构设计、大型重构、代码审查、多文件工程</td>
+<td>速度偏慢，价格高</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5</strong></td>
+<td>快速直接，落地性强，擅长期望管理和假设填充</td>
+<td>算法竞赛、DevOps、终端CLI、Agent自动化</td>
+<td>复杂多文件工程略逊于Claude</td>
+</tr>
+<tr>
+<td><strong>Gemini 3.1 Pro</strong></td>
+<td>代码简洁，API记忆准确，Google生态深度集成</td>
+<td>Python数据科学、GCP开发、移动端、Rust&#x2F;C++</td>
+<td>多文件重构能力一般</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>稳定可靠，低级错误极少，代码规范度高</td>
+<td>日常全栈开发、单文件功能、Bug修复</td>
+<td>超难算法略弱于旗舰</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-国产主力模型-1"><a href="#3-2-国产主力模型-1" class="headerlink" title="3.2 国产主力模型"></a>3.2 国产主力模型</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>编程风格</th>
+<th>最强领域</th>
+<th>短板</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>DeepSeek V4 Pro</strong></td>
+<td>逻辑严密，算法能力突出，数学建模强</td>
+<td>算法题、数据结构、科学计算、后端开发</td>
+<td>长上下文略弱，英文生态一般</td>
+</tr>
+<tr>
+<td><strong>通义千问 Qwen3.7-Max</strong></td>
+<td>中文注释友好，框架适配全面</td>
+<td>国内技术栈、前端开发、中文项目文档</td>
+<td>超复杂工程略逊于海外旗舰</td>
+</tr>
+<tr>
+<td><strong>豆包 Seed 2.0 Pro</strong></td>
+<td>理解中文需求精准，工具调用稳定</td>
+<td>业务系统开发、SQL优化、国内云服务</td>
+<td>极底层系统编程较弱</td>
+</tr>
+</tbody></table>
+<h2 id="四、API收费价格对比-1"><a href="#四、API收费价格对比-1" class="headerlink" title="四、API收费价格对比"></a>四、API收费价格对比</h2><h3 id="4-1-海外模型价格（美元-百万-Tokens）-1"><a href="#4-1-海外模型价格（美元-百万-Tokens）-1" class="headerlink" title="4.1 海外模型价格（美元 &#x2F; 百万 Tokens）"></a>4.1 海外模型价格（美元 &#x2F; 百万 Tokens）</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输入价格</th>
+<th>输出价格</th>
+<th>缓存输入价</th>
+<th>上下文</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>GPT-5.5 Pro</strong></td>
+<td>$30.00</td>
+<td>$180.00</td>
+<td>—</td>
+<td>1.05M</td>
+</tr>
+<tr>
+<td><strong>Claude Opus 4.8</strong></td>
+<td>$5.00</td>
+<td>$25.00</td>
+<td>$0.50</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>GPT-5.5</strong></td>
+<td>$5.00</td>
+<td>$30.00</td>
+<td>$0.50</td>
+<td>1.05M</td>
+</tr>
+<tr>
+<td><strong>GPT-5.4 Codex</strong></td>
+<td>$1.75</td>
+<td>$14.00</td>
+<td>—</td>
+<td>400K</td>
+</tr>
+<tr>
+<td><strong>Claude Sonnet 4.6</strong></td>
+<td>$3.00</td>
+<td>$15.00</td>
+<td>$0.30</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>Gemini 2.5 Pro</strong></td>
+<td>$1.25</td>
+<td>$10.00</td>
+<td>—</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>GPT-4o mini</strong></td>
+<td>$0.15</td>
+<td>$0.60</td>
+<td>—</td>
+<td>128K</td>
+</tr>
+<tr>
+<td><strong>Gemini Flash</strong></td>
+<td>$0.075</td>
+<td>$0.30</td>
+<td>—</td>
+<td>1M</td>
+</tr>
+<tr>
+<td><strong>Claude Haiku</strong></td>
+<td>$0.80</td>
+<td>$4.00</td>
+<td>—</td>
+<td>200K</td>
+</tr>
+</tbody></table>
+<h3 id="4-2-国内模型价格（人民币-百万-Tokens）-1"><a href="#4-2-国内模型价格（人民币-百万-Tokens）-1" class="headerlink" title="4.2 国内模型价格（人民币 &#x2F; 百万 Tokens）"></a>4.2 国内模型价格（人民币 &#x2F; 百万 Tokens）</h3><table>
+<thead>
+<tr>
+<th>模型</th>
+<th>输入价格</th>
+<th>输出价格</th>
+<th>提供商</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>DeepSeek V4 Pro</strong></td>
+<td>~2.0</td>
+<td>~8.0</td>
+<td>深度求索</td>
+</tr>
+<tr>
+<td><strong>DeepSeek V3</strong></td>
+<td>~0.5</td>
+<td>~2.0</td>
+<td>深度求索</td>
+</tr>
+<tr>
+<td><strong>豆包 Seed 2.0 Pro</strong></td>
+<td>3.2 &#x2F; 4.8 &#x2F; 9.6（阶梯）</td>
+<td>16 &#x2F; 24 &#x2F; 48（阶梯）</td>
+<td>火山引擎</td>
+</tr>
+<tr>
+<td><strong>豆包 Seed 2.0 Lite</strong></td>
+<td>0.6</td>
+<td>3.6</td>
+<td>火山引擎</td>
+</tr>
+<tr>
+<td><strong>通义千问 Qwen3.5-Flash</strong></td>
+<td>0.2</td>
+<td>2.0</td>
+<td>阿里云</td>
+</tr>
+<tr>
+<td><strong>通义千问 Qwen3.7-Max</strong></td>
+<td>~4.0</td>
+<td>~16.0</td>
+<td>阿里云</td>
+</tr>
+<tr>
+<td><strong>GLM-4-Flash</strong></td>
+<td>免费</td>
+<td>免费</td>
+<td>智谱AI</td>
+</tr>
+<tr>
+<td><strong>Kimi K2.6</strong></td>
+<td>6.5</td>
+<td>27</td>
+<td>月之暗面</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>注：国内模型价格波动较大，各平台常有折扣活动，实际成本通常低于标价。</p>
+</blockquote>
+<h3 id="4-3-月度使用成本估算（按开发者日均使用）-1"><a href="#4-3-月度使用成本估算（按开发者日均使用）-1" class="headerlink" title="4.3 月度使用成本估算（按开发者日均使用）"></a>4.3 月度使用成本估算（按开发者日均使用）</h3><table>
+<thead>
+<tr>
+<th>使用强度</th>
+<th>日均Token消耗</th>
+<th>Claude Opus月成本</th>
+<th>GPT-5.5月成本</th>
+<th>DeepSeek月成本</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>轻度使用</strong></td>
+<td>50K输入 &#x2F; 10K输出</td>
+<td>~$11.5</td>
+<td>~$12</td>
+<td>~$0.6</td>
+</tr>
+<tr>
+<td><strong>中度使用</strong></td>
+<td>200K输入 &#x2F; 50K输出</td>
+<td>~$42.5</td>
+<td>~$50</td>
+<td>~$2.2</td>
+</tr>
+<tr>
+<td><strong>重度使用</strong></td>
+<td>1M输入 &#x2F; 300K输出</td>
+<td>~$125</td>
+<td>~$230</td>
+<td>~$11</td>
+</tr>
+<tr>
+<td><strong>团队级(10人)</strong></td>
+<td>10M输入 &#x2F; 3M输出</td>
+<td>~$1,250</td>
+<td>~$2,300</td>
+<td>~$110</td>
+</tr>
+</tbody></table>
+<h2 id="五、选型建议-1"><a href="#五、选型建议-1" class="headerlink" title="五、选型建议"></a>五、选型建议</h2><h3 id="5-1-按场景推荐-1"><a href="#5-1-按场景推荐-1" class="headerlink" title="5.1 按场景推荐"></a>5.1 按场景推荐</h3><table>
+<thead>
+<tr>
+<th>场景</th>
+<th>首选模型</th>
+<th>备选模型</th>
+<th>核心理由</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>复杂系统架构设计</strong></td>
+<td>Claude Opus 4.8</td>
+<td>GPT-5.5 Pro</td>
+<td>深度推理 + 多文件理解能力最强</td>
+</tr>
+<tr>
+<td><strong>算法竞赛 &#x2F; LeetCode困难题</strong></td>
+<td>DeepSeek V4 Pro</td>
+<td>GPT-5.5</td>
+<td>算法能力顶尖，性价比极高</td>
+</tr>
+<tr>
+<td><strong>日常全栈开发</strong></td>
+<td>Claude Sonnet 4.6</td>
+<td>GPT-5.4 Codex</td>
+<td>稳定、错误率低、速度够用</td>
+</tr>
+<tr>
+<td><strong>快速原型 &#x2F; 代码补全</strong></td>
+<td>GPT-5.5 标准版</td>
+<td>Qwen3.5-Flash</td>
+<td>速度最快，体验流畅</td>
+</tr>
+<tr>
+<td><strong>预算有限 &#x2F; 批量任务</strong></td>
+<td>DeepSeek V3</td>
+<td>Qwen3.5-Flash</td>
+<td>价格仅为海外旗舰1&#x2F;20，性能达80%</td>
+</tr>
+<tr>
+<td><strong>中文项目 &#x2F; 国内技术栈</strong></td>
+<td>通义千问 Qwen3.7-Max</td>
+<td>豆包 Seed 2.0 Pro</td>
+<td>中文理解精准，合规性好</td>
+</tr>
+<tr>
+<td><strong>开源私有化部署</strong></td>
+<td>Qwen3-Coder</td>
+<td>DeepSeek-Coder V2</td>
+<td>开源协议友好，性能够用</td>
+</tr>
+</tbody></table>
+<h3 id="5-2-关键结论-1"><a href="#5-2-关键结论-1" class="headerlink" title="5.2 关键结论"></a>5.2 关键结论</h3><ol>
+<li><p><strong>编程能力第一梯队已形成</strong>：Claude Opus、DeepSeek V4 Pro、GPT-5.x 处于第一梯队，SWE-bench均在70%以上，彼此差距在5-10个百分点内。</p>
+</li>
+<li><p><strong>国产模型性价比碾压</strong>：DeepSeek V3&#x2F;V4 价格仅为海外同类模型的1&#x2F;10~1&#x2F;20，性能差距已缩小到可接受范围，是成本敏感场景的首选。</p>
+</li>
+<li><p><strong>HumanEval已无参考价值</strong>：所有主流模型pass@1均超过90%，区分度极低，评估真实工程能力请重点参考 SWE-bench 和 LiveCodeBench。</p>
+</li>
+<li><p><strong>速度与质量成反比</strong>：通常推理质量越高的模型速度越慢。日常开发建议用中速模型（Sonnet&#x2F;GPT-5.5）作为主力，遇到难题再切换旗舰模型。</p>
+</li>
+</ol>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>据说打赏我的人工资涨的比别人多~~~</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay_code.jpg" alt=" 微信支付"/>
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay_code.jpg" alt=" 支付宝"/>
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/AI/" rel="tag"># AI</a>
+          
+            <a href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/" rel="tag"># 大模型</a>
+          
+            <a href="/tags/%E7%BC%96%E7%A8%8B/" rel="tag"># 编程</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/12/k8s-terminationGracePeriodSeconds/" rel="next" title="[K8S] 如何利用terminationGracePeriodSeconds 优雅地关闭你的服务？">
+                <i class="fa fa-chevron-left"></i> [K8S] 如何利用terminationGracePeriodSeconds 优雅地关闭你的服务？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        
+  <div class="bdsharebuttonbox"><a href="#" class="bds_more" data-cmd="more"></a><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a></div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='https://bdimg.share.dt27.org/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/santi.png"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%20%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/damoshushu" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="cctg2012@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="https://gitlab.com/damoshushu" target="_blank" title="GitLab">
+                      
+                        <i class="fa fa-fw fa-gitlab"></i>GitLab</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://netium.gitlab.io/" title="TechX 空间" target="_blank">TechX 空间</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://xiaozhou.net/" title="iTimothy" target="_blank">iTimothy</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BD%E5%86%85%E5%A4%96%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%E5%85%A8%E9%9D%A2%E5%AF%B9%E6%AF%94%EF%BC%882026%E5%B9%B46%E6%9C%88%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">国内外大模型编程能力全面对比（2026年6月）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E5%AF%B9%E6%AF%94"><span class="nav-number">1.1.</span> <span class="nav-text">一、核心基准测试对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%B8%BB%E6%B5%81%E7%BC%96%E7%A0%81%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E8%AF%B4%E6%98%8E"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 主流编码基准测试说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%AC%AC%E4%B8%80%E6%A2%AF%E9%98%9F%E6%A8%A1%E5%9E%8B%E5%9F%BA%E5%87%86%E6%88%90%E7%BB%A9%E5%AF%B9%E6%AF%94"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 第一梯队模型基准成绩对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%9B%BD%E5%86%85%E6%A8%A1%E5%9E%8B%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%E6%A2%AF%E9%98%9F"><span class="nav-number">1.1.3.</span> <span class="nav-text">1.3 国内模型编程能力梯队</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E9%80%9F%E5%BA%A6%E5%AF%B9%E6%AF%94"><span class="nav-number">1.2.</span> <span class="nav-text">二、代码生成速度对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BA%91%E7%AB%AFAPI%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6"><span class="nav-number">1.2.1.</span> <span class="nav-text">2.1 云端API推理速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%BC%80%E6%BA%90%E6%A8%A1%E5%9E%8B%E6%9C%AC%E5%9C%B0%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%EF%BC%88A100-80G%EF%BC%89"><span class="nav-number">1.2.2.</span> <span class="nav-text">2.2 开源模型本地推理速度（A100 80G）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%90%84%E6%A8%A1%E5%9E%8B%E7%BC%96%E7%A8%8B%E7%89%B9%E7%82%B9%E4%B8%8E%E6%93%85%E9%95%BF%E9%A2%86%E5%9F%9F"><span class="nav-number">1.3.</span> <span class="nav-text">三、各模型编程特点与擅长领域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%B5%B7%E5%A4%96%E6%97%97%E8%88%B0%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.1.</span> <span class="nav-text">3.1 海外旗舰模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%9B%BD%E4%BA%A7%E4%B8%BB%E5%8A%9B%E6%A8%A1%E5%9E%8B"><span class="nav-number">1.3.2.</span> <span class="nav-text">3.2 国产主力模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81API%E6%94%B6%E8%B4%B9%E4%BB%B7%E6%A0%BC%E5%AF%B9%E6%AF%94"><span class="nav-number">1.4.</span> <span class="nav-text">四、API收费价格对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%B5%B7%E5%A4%96%E6%A8%A1%E5%9E%8B%E4%BB%B7%E6%A0%BC%EF%BC%88%E7%BE%8E%E5%85%83-%E7%99%BE%E4%B8%87-Tokens%EF%BC%89"><span class="nav-number">1.4.1.</span> <span class="nav-text">4.1 海外模型价格（美元 &#x2F; 百万 Tokens）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%9B%BD%E5%86%85%E6%A8%A1%E5%9E%8B%E4%BB%B7%E6%A0%BC%EF%BC%88%E4%BA%BA%E6%B0%91%E5%B8%81-%E7%99%BE%E4%B8%87-Tokens%EF%BC%89"><span class="nav-number">1.4.2.</span> <span class="nav-text">4.2 国内模型价格（人民币 &#x2F; 百万 Tokens）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E6%9C%88%E5%BA%A6%E4%BD%BF%E7%94%A8%E6%88%90%E6%9C%AC%E4%BC%B0%E7%AE%97%EF%BC%88%E6%8C%89%E5%BC%80%E5%8F%91%E8%80%85%E6%97%A5%E5%9D%87%E4%BD%BF%E7%94%A8%EF%BC%89"><span class="nav-number">1.4.3.</span> <span class="nav-text">4.3 月度使用成本估算（按开发者日均使用）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%89%E5%9E%8B%E5%BB%BA%E8%AE%AE"><span class="nav-number">1.5.</span> <span class="nav-text">五、选型建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%8C%89%E5%9C%BA%E6%99%AF%E6%8E%A8%E8%8D%90"><span class="nav-number">1.5.1.</span> <span class="nav-text">5.1 按场景推荐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%85%B3%E9%94%AE%E7%BB%93%E8%AE%BA"><span class="nav-number">1.5.2.</span> <span class="nav-text">5.2 关键结论</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E6%88%91%E9%92%88%E5%AF%B9%E6%9F%90%E4%B8%AA%E5%85%B7%E4%BD%93%E6%A8%A1%E5%9E%8B%E6%88%96%E7%89%B9%E5%AE%9A%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%EF%BC%88%E5%A6%82Python%E3%80%81Java%E3%80%81C-%EF%BC%89%E5%81%9A%E6%9B%B4%E6%B7%B1%E5%85%A5%E7%9A%84%E5%AF%B9%E6%AF%94%E5%88%86%E6%9E%90%E5%90%97%EF%BC%9F%E2%80%94title-%E2%80%98%E6%9C%80%E6%96%B0%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%E5%AF%B9%E6%AF%94%E2%80%99date-2026-06-27-15-30-06tags-AI-%E5%A4%A7%E6%A8%A1%E5%9E%8B-%E7%BC%96%E7%A8%8B-categories-AI"><span class="nav-number">1.6.</span> <span class="nav-text">需要我针对某个具体模型或特定编程语言（如Python、Java、C++）做更深入的对比分析吗？—title: ‘最新大模型编程能力对比’date: 2026-06-27 15:30:06tags: [AI,大模型,编程]categories: AI</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%BD%E5%86%85%E5%A4%96%E5%A4%A7%E6%A8%A1%E5%9E%8B%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%E5%85%A8%E9%9D%A2%E5%AF%B9%E6%AF%94%EF%BC%882026%E5%B9%B46%E6%9C%88%EF%BC%89-1"><span class="nav-number">2.</span> <span class="nav-text">国内外大模型编程能力全面对比（2026年6月）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E6%A0%B8%E5%BF%83%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E5%AF%B9%E6%AF%94-1"><span class="nav-number">2.1.</span> <span class="nav-text">一、核心基准测试对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-%E4%B8%BB%E6%B5%81%E7%BC%96%E7%A0%81%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E8%AF%B4%E6%98%8E-1"><span class="nav-number">2.1.1.</span> <span class="nav-text">1.1 主流编码基准测试说明</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-%E7%AC%AC%E4%B8%80%E6%A2%AF%E9%98%9F%E6%A8%A1%E5%9E%8B%E5%9F%BA%E5%87%86%E6%88%90%E7%BB%A9%E5%AF%B9%E6%AF%94-1"><span class="nav-number">2.1.2.</span> <span class="nav-text">1.2 第一梯队模型基准成绩对比</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-%E5%9B%BD%E5%86%85%E6%A8%A1%E5%9E%8B%E7%BC%96%E7%A8%8B%E8%83%BD%E5%8A%9B%E6%A2%AF%E9%98%9F-1"><span class="nav-number">2.1.3.</span> <span class="nav-text">1.3 国内模型编程能力梯队</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E4%BB%A3%E7%A0%81%E7%94%9F%E6%88%90%E9%80%9F%E5%BA%A6%E5%AF%B9%E6%AF%94-1"><span class="nav-number">2.2.</span> <span class="nav-text">二、代码生成速度对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BA%91%E7%AB%AFAPI%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">2.1 云端API推理速度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E5%BC%80%E6%BA%90%E6%A8%A1%E5%9E%8B%E6%9C%AC%E5%9C%B0%E6%8E%A8%E7%90%86%E9%80%9F%E5%BA%A6%EF%BC%88A100-80G%EF%BC%89-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">2.2 开源模型本地推理速度（A100 80G）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E5%90%84%E6%A8%A1%E5%9E%8B%E7%BC%96%E7%A8%8B%E7%89%B9%E7%82%B9%E4%B8%8E%E6%93%85%E9%95%BF%E9%A2%86%E5%9F%9F-1"><span class="nav-number">2.3.</span> <span class="nav-text">三、各模型编程特点与擅长领域</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-%E6%B5%B7%E5%A4%96%E6%97%97%E8%88%B0%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">2.3.1.</span> <span class="nav-text">3.1 海外旗舰模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-%E5%9B%BD%E4%BA%A7%E4%B8%BB%E5%8A%9B%E6%A8%A1%E5%9E%8B-1"><span class="nav-number">2.3.2.</span> <span class="nav-text">3.2 国产主力模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%E3%80%81API%E6%94%B6%E8%B4%B9%E4%BB%B7%E6%A0%BC%E5%AF%B9%E6%AF%94-1"><span class="nav-number">2.4.</span> <span class="nav-text">四、API收费价格对比</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-1-%E6%B5%B7%E5%A4%96%E6%A8%A1%E5%9E%8B%E4%BB%B7%E6%A0%BC%EF%BC%88%E7%BE%8E%E5%85%83-%E7%99%BE%E4%B8%87-Tokens%EF%BC%89-1"><span class="nav-number">2.4.1.</span> <span class="nav-text">4.1 海外模型价格（美元 &#x2F; 百万 Tokens）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-2-%E5%9B%BD%E5%86%85%E6%A8%A1%E5%9E%8B%E4%BB%B7%E6%A0%BC%EF%BC%88%E4%BA%BA%E6%B0%91%E5%B8%81-%E7%99%BE%E4%B8%87-Tokens%EF%BC%89-1"><span class="nav-number">2.4.2.</span> <span class="nav-text">4.2 国内模型价格（人民币 &#x2F; 百万 Tokens）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-3-%E6%9C%88%E5%BA%A6%E4%BD%BF%E7%94%A8%E6%88%90%E6%9C%AC%E4%BC%B0%E7%AE%97%EF%BC%88%E6%8C%89%E5%BC%80%E5%8F%91%E8%80%85%E6%97%A5%E5%9D%87%E4%BD%BF%E7%94%A8%EF%BC%89-1"><span class="nav-number">2.4.3.</span> <span class="nav-text">4.3 月度使用成本估算（按开发者日均使用）</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E3%80%81%E9%80%89%E5%9E%8B%E5%BB%BA%E8%AE%AE-1"><span class="nav-number">2.5.</span> <span class="nav-text">五、选型建议</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-1-%E6%8C%89%E5%9C%BA%E6%99%AF%E6%8E%A8%E8%8D%90-1"><span class="nav-number">2.5.1.</span> <span class="nav-text">5.1 按场景推荐</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-2-%E5%85%B3%E9%94%AE%E7%BB%93%E8%AE%BA-1"><span class="nav-number">2.5.2.</span> <span class="nav-text">5.2 关键结论</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2026</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">大漠叔叔</span>
+
+  
+</div>
+
+<div>
+<p><a href="https://beian.miit.gov.cn/" target="_blank">蜀ICP备2022013555号-1</a></p>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
